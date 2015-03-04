@@ -17,8 +17,8 @@ import ch.ethz.twimight.R;
 public class ConditionsActivity extends Activity {
 	
 	static final String TERMS = "termsAccepted";
-	static boolean goStarted = false;
 	
+	private static boolean lanternStarted = false;
 	private static final String TAG = "Conditions";
 	
 	@Override
@@ -34,20 +34,24 @@ public class ConditionsActivity extends Activity {
 		if (termsAccepted) {
 			startLogin();
 			
-	    	if (!goStarted) {
+	    	if (!lanternStarted) {
 	    		// Initializing application context.
-	    		Log.d(TAG, "Starting go init");
 	    		try {
-	    			Log.d(TAG, "Starting flashlight...");
+	    			Log.d(TAG, "Starting Lantern...");
+	    			// init loads libgojni.so and starts the runtime
 	    			Go.init(getApplicationContext());
 	    			Flashlight.RunClientProxy("127.0.0.1:9192");
+	    			// specify that all of our HTTP traffic should be routed through
+	    			// our local proxy
 	    	        System.setProperty("http.proxyHost", "127.0.0.1");
 	    	        System.setProperty("http.proxyPort", "9192");
 	    		} catch (Exception e) {
-	    			Log.e(TAG, "Got exception " + e.getMessage());
+	    			// if we're unable to start Lantern for any reason
+	    			// we just exit here
+	    			Log.e(TAG, "Error starting Lantern; " + e.getMessage());
 	    			throw new RuntimeException(e);
 	    		}
-	    		goStarted = true;
+	    		lanternStarted = true;
 	    	}
 			
 		} else {
