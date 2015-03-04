@@ -1,2 +1,2 @@
 # twitter
-Twimight Twitter app for Android powered by Lantern
+Twmight Twitter client powered by Lantern
